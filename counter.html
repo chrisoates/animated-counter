@@ -1,0 +1,101 @@
+<html>
+<head>
+<style>
+.progress-container{
+    font-family:Arial, sans-serif;
+    background:#eee;
+    width:200px;
+    margin:25px 0 0 0;
+    padding:3px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+}
+
+#progress-bar{
+    height:20px;
+    background:#44bac5;
+    width:0;
+    text-align:right;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+}
+
+.prog-indicator{
+    font-size:11px;
+    color:#fff;
+    float:right;
+    position:relative;
+    top:-22px;
+    right:-18px;
+    text-align:center;
+    padding:0 0 10px 0;
+    background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAANCAYAAAB2HjRBAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJxJREFUeNpiSUtL+89AHrBlAhLLyNAI0nMEpLkMiL+QoPELVA8DSPNTIG4lQXMrVA9YMwj0AfEdIjTeh6plQNb8C4jridBcA1WLohkeCHg0HkEPXCY0BblA/BeLxr9QOQZ8mi8A8SwsmmdB5fBqhvnrHRL/HVSMgRjNIMUdSPxuNMPwagaBidCou4McNeiABYc4KDoKkNhYAUCAAQBK8SOFwZXRVwAAAABJRU5ErkJggg%3D%3D) no-repeat bottom center;
+}
+
+.prog-indicator span{
+    background:#666;
+    padding:3px 8px;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px; 
+}
+</style>
+<script>
+var anibar = {
+	bindEvent: function(element, type, handler) {
+   		if(element.addEventListener) {
+      		element.addEventListener(type, handler, false);
+   		} else {
+      		element.attachEvent('on'+type, handler);
+   		}
+	},
+	
+	barIndicator:'',
+
+    moveProgBar: function(bar, val){
+        bar.style.width = val+'%';
+        /* IE required check - IE ignores text nodes (mostly), therefore [0] is bar indicator node, else it's [1] */
+        if( anibar.barIndicator == ''){
+            anibar.barIndicator = ( bar.childNodes[0].nodeType != 3 ? bar.childNodes[0] : bar.childNodes[1] );        
+        }
+        
+        if( val < bar.title.valueOf() ){
+            /* Slow the bar nearer the end of its travels - change the factor to speed up or slow down */
+            var timeout = val*0.8;
+            anibar.barIndicator.childNodes[0].innerHTML = anibar.barIndicator.title*val/bar.title;
+            anibar.barIndicator.style.right =  (-1*(anibar.barIndicator.offsetWidth/2)) + "px";
+
+            setTimeout(function(){anibar.moveProgBar(bar, val+1)}, timeout);
+      }
+        else{
+            anibar.barIndicator.childNodes[0].innerHTML = anibar.barIndicator.title;
+            anibar.barIndicator = '';
+        }
+    }
+};
+
+anibar.bindEvent(window, 'load', function() {
+   anibar.moveProgBar(document.getElementById('progress-bar'), 1);
+});
+
+</script>
+</head>
+<body>
+<!-- Change the two numerical "title" attributes below:
+    progress-bar.title : Percentage of the counter width to scroll across
+    progress-indicator.title : Final value of the counter
+ -->
+<div id="progress-indicator-container" class="clearfix">
+<h1>Counter</h1>
+<div id="progress-target">Target: <strong>500</strong></div>
+<div class="progress-container">
+	<div id="progress-bar" title="50">
+		<div class="prog-indicator" title="250"><span>0</span></div>
+	</div>
+</div>
+</div>
+
+</body>
+</html>
